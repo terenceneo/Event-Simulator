@@ -22,7 +22,7 @@ class Main {
             boolean done = false;
             if (next.serverindex != -1) {
                 int serverindex = next.serverindex;
-                Server.servers.get(serverindex-1).triesToServe(next);
+                Server.servers.get(serverindex - 1).triesToServe(next);
                 done = true;
             }
             /*

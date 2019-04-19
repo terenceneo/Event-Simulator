@@ -19,7 +19,7 @@ public class Customer {
         this.index = ++count;
         this.time = time;
         this.state = "arrives";
-        this.serverindex = 0;
+        this.serverindex = -1;
     }
 
     public static void add(Customer c) {
