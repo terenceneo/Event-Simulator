@@ -9,7 +9,7 @@ public class Customer {
         = new PriorityQueue<Customer>(100, new EventComparator());
     public double time;
     public String state;
-    public Server server;
+    public int serverindex;
     
     /**
      * Creates a Customer.
@@ -19,11 +19,15 @@ public class Customer {
         this.index = ++count;
         this.time = time;
         this.state = "arrives";
-        this.server = null;
+        this.serverindex = 0;
     }
 
     public static void add(Customer c) {
         customers.add(c);
+    }
+
+    public void setServerIndex(int serverindex) {
+        this.serverindex = serverindex;
     }
 
     public void isServed() {
@@ -69,11 +73,11 @@ public class Customer {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%.3f", this.time) + " " + this.index + " " + this.state);
         if (this.state.equals("waits")) {
-            sb.append(" to be served by " + this.server.index);
+            sb.append(" to be served by " + this.serverindex);
         } else if (this.state.equals("served")) {
-            sb.append(" by " + this.server.index);
+            sb.append(" by " + this.serverindex);
         } else if (this.state.equals("done")) {
-            sb.append(" serving by " + this.server.index);
+            sb.append(" serving by " + this.serverindex);
         }
         return sb.toString();
     }

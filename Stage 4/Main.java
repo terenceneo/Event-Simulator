@@ -20,8 +20,9 @@ class Main {
             Customer next = Customer.customers.peek();
             System.out.println(next);
             boolean done = false;
-            if (next.server != null) {
-                next.server.triesToServe(next);
+            if (next.serverindex != -1) {
+                int serverindex = next.serverindex;
+                Server.servers.get(serverindex-1).triesToServe(next);
                 done = true;
             }
             /*

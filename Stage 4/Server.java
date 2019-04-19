@@ -79,7 +79,7 @@ public class Server {
     public void serves(Customer c) {
         this.isServing = c;
         this.state = "serving";
-        c.server = this;
+        c.setServerIndex(this.index);
         customersServed.add(c);
         if (this.queue.contains(c)) {
             waitTimes.add(this.nextTime - c.time);
@@ -98,7 +98,7 @@ public class Server {
     public void waits(Customer c) {
         this.time = Math.max(c.time, this.time);
         c.waits();
-        c.server = this;
+        c.setServerIndex(this.index);
         this.queue.add(c);
     }
 
