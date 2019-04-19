@@ -2,13 +2,15 @@ package cs2030.simulator;
 
 import java.util.ArrayList;
 import java.lang.Math;
+import java.util.LinkedList;
 
 public class Server {
     public static ArrayList<Server> servers = new ArrayList<>();
     public static ArrayList<Customer> customersServed = new ArrayList<>();
     public static ArrayList<Customer> customersLeft = new ArrayList<>();
     public static ArrayList<Double> waitTimes = new ArrayList<>();
-    public ArrayList<Customer> queue = new ArrayList<>();
+    public LinkedList<Customer> queue = new LinkedList<>();
+    public static int queuelength;
     public double time;
     public double nextTime;
     public double serviceTime;
@@ -41,8 +43,8 @@ public class Server {
             Customer.customers.remove(c);
             //System.out.println("server removed");
         } else if (c.state.equals("served")) {
-            if (this.queue.contains(c)) {
-                this.queue.remove(c);
+            if (this.queue.peek() == c) {
+                this.queue.poll();
             }
             //System.out.println("Server next time: " + this.nextTime);
             this.serviceTime = Random.genServiceTime();
@@ -50,11 +52,11 @@ public class Server {
             c.done(this.nextTime);
         } else if (this.isIdle(c)) {
             this.serves(c);
-        } else if (!this.hasQueue()) {
+        } else if (this.hasQueueSpace()) {
             this.waits(c);
-        } else if (this.queue.get(0) != c && this.lastServer) {
+        } else if (this.queue.peek() != c && this.lastServer) {
             this.leaves(c);
-        } else if (this.queue.get(0) == c) {
+        } else if (this.queue.peek() == c) {
             this.serves(c);
         }
         /*
@@ -81,7 +83,7 @@ public class Server {
         this.state = "serving";
         c.setServerIndex(this.index);
         customersServed.add(c);
-        if (this.queue.contains(c)) {
+        if (this.queue.peek() == c) {
             waitTimes.add(this.nextTime - c.time);
             c.isServed(this.nextTime);
         } else {
@@ -99,7 +101,9 @@ public class Server {
         this.time = Math.max(c.time, this.time);
         c.waits();
         c.setServerIndex(this.index);
-        this.queue.add(c);
+        if (this.queue.peekLast() != c) {
+            this.queue.add(c);
+        }
     }
 
     /**
@@ -126,8 +130,8 @@ public class Server {
         return (this.state.equals("idle"));
     }
 
-    public boolean hasQueue() {
-        return (this.queue.size() > 0);
+    public boolean hasQueueSpace() {
+        return (this.queue.size() <= Server.queuelength);
     }
 
     /**

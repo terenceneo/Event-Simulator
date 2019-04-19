@@ -22,14 +22,6 @@ public class Customer {
         this.serverindex = -1;
     }
 
-    public static void add(Customer c) {
-        customers.add(c);
-    }
-
-    public void setServerIndex(int serverindex) {
-        this.serverindex = serverindex;
-    }
-
     public void isServed() {
         this.state = "served";
     }
@@ -63,6 +55,14 @@ public class Customer {
         customers.remove(this);
         customers.add(this);
         //System.out.println("cus " + this.index + " removed and added");
+    }
+
+    public static void add(Customer c) {
+        customers.add(c);
+    }
+
+    public void setServerIndex(int serverindex) {
+        this.serverindex = serverindex;
     }
 
     /**

@@ -9,6 +9,7 @@ class Main {
         
         Random.seed = sc.nextInt();
         Random.serverNo = sc.nextInt();
+        Server.queuelength = sc.nextInt();
         Random.cusNo = sc.nextInt();
         Random.lambda = sc.nextDouble();
         Random.mu = sc.nextDouble();
@@ -19,7 +20,17 @@ class Main {
         while (!Customer.customers.isEmpty()) {
             Customer next = Customer.customers.peek();
             System.out.println(next);
+            if (next.index == 10 || next.index == 9) {
+                System.out.println("PQ: " + Customer.customers);
+                for (Server s: Server.servers) {
+                    System.out.println(s.index + ": " + s.queue);
+                }
+                System.out.println();
+            }
+            //push into event arraylist instead of printing out
+            //print out all events after everything
             boolean done = false;
+            // Already assigned a Server
             if (next.serverindex != -1) {
                 int serverindex = next.serverindex;
                 Server.servers.get(serverindex - 1).triesToServe(next);
@@ -45,7 +56,7 @@ class Main {
              */
             if (!done) {
                 for (Server s: Server.servers) {
-                    if (!s.hasQueue() || s.lastServer) {
+                    if (s.hasQueueSpace() || s.lastServer) {
                         s.triesToServe(next);
                         break;
                     }
