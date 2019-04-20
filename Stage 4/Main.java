@@ -27,7 +27,8 @@ class Main {
         
         while (!Customer.customers.isEmpty()) {
             Customer next = Customer.customers.peek();
-            Event event = new Event(next.time, next.index, next.toString(), 1);
+            Event event = new Event(next.time, next.index,
+                next.toString(), 1, Customer.eventCounter++);
 
             // if (next.index == 10 || next.index == 9) {
             //     System.out.println("PQ: " + Customer.customers);

@@ -17,6 +17,10 @@ public class EventComparator implements Comparator<Event> {
             return -1;
         } else if (c1.index > c2.index) {
             return 1;
+        } else if (c1.counter < c2.counter) { 
+            return -1;
+        } else if (c1.counter > c2.counter) {
+            return 1;   
         } else {
             return 0;
         }

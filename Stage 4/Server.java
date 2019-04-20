@@ -11,6 +11,7 @@ public class Server {
     public static ArrayList<Double> waitTimes = new ArrayList<>();
     public LinkedList<Customer> queue = new LinkedList<>();
     public static int queuelength;
+    public int eventCounter = 0;
     public double time;
     public double nextTime;
     public double serviceTime;
@@ -105,12 +106,14 @@ public class Server {
         // checks if it is time for server to rest
         if (Random.genRandomRest() < pr) { //server_rest
             this.state = "rest";
-            Event event = new Event(this.time, this.index, this.toString(), 2);
+            Event event = new Event(this.time, this.index,
+                this.toString(), 2, this.eventCounter++);
             this.nextTime = Math.max(this.nextTime,
             this.time + Random.genRestPeriod());
             this.time = this.nextTime;
             this.state = "back";
-            event = new Event(this.time, this.index, this.toString(), 0);
+            event = new Event(this.time, this.index,
+                this.toString(), 0, this.eventCounter++);
         }
     }
 
