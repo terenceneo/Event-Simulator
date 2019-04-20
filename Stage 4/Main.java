@@ -1,7 +1,7 @@
 import cs2030.simulator.Server;
 import cs2030.simulator.Customer;
 import cs2030.simulator.Random;
-import cs2030.simulator.Events;
+import cs2030.simulator.Event;
 import java.util.Scanner;
 
 class Main {
@@ -27,7 +27,7 @@ class Main {
         
         while (!Customer.customers.isEmpty()) {
             Customer next = Customer.customers.peek();
-            Events.addEvent(next.toString());
+            Event event = new Event(next.time, next.index, next.toString(), 1);
 
             // if (next.index == 10 || next.index == 9) {
             //     System.out.println("PQ: " + Customer.customers);
@@ -90,8 +90,8 @@ class Main {
             */
         }
 
-        while (Events.hasEvents()) {
-            Events.printEvent();
+        while (Event.hasEvents()) {
+            Event.printEvent();
         }
         System.out.println("[" + String.format("%.3f", Server.getAveWaitTime()) + " " + 
             Server.customersServed.size() + " " + Server.customersLeft.size() + "]");

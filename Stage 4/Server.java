@@ -105,10 +105,12 @@ public class Server {
         // checks if it is time for server to rest
         if (Random.genRandomRest() < pr) { //server_rest
             this.state = "rest";
-            Events.addEvent(String.format("%.3f", this.time) + this.toString() + "rest");
+            Event event = new Event(this.time, this.index, this.toString(), 2);
             this.nextTime = Math.max(this.nextTime,
             this.time + Random.genRestPeriod());
-            Events.addEvent(String.format("%.3f", this.nextTime) + this.toString() + "back");
+            this.time = this.nextTime;
+            this.state = "back";
+            event = new Event(this.time, this.index, this.toString(), 0);
         }
     }
 
@@ -177,6 +179,7 @@ public class Server {
     }
     
     public String toString() {
-        return (" server " + this.index + " ");
+        return (String.format("%.3f", this.time) + " server "
+        + this.index + " " + this.state);
     }
 }

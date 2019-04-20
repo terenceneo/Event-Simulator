@@ -6,7 +6,7 @@ public class Customer {
     public static int count = 0;
     public int index;    
     public static PriorityQueue<Customer> customers
-        = new PriorityQueue<Customer>(10000, new EventComparator());
+        = new PriorityQueue<Customer>(10000, new CusComparator());
     public double time;
     public double arrivalTime;
     public String state;
