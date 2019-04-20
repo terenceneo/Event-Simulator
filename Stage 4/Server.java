@@ -18,7 +18,7 @@ public class Server {
     public Customer isServing;
     public int index;
     public boolean lastServer = false;
-
+    public static double pr;
     
     /**
      * Constructs a Server.
@@ -40,24 +40,13 @@ public class Server {
         if (c.state.equals("leaves")) {
             Customer.customers.remove(c);
         } else if (c.state.equals("done")) {
-            Customer.customers.remove(c);
+            this.doneServing(c);
         } else if (c.state.equals("served")) {
-            if (this.queue.peek() == c) {
-                this.queue.poll();
-            }
-            this.serviceTime = Random.genServiceTime();
-            this.time = Math.max(this.time, c.time);
-            this.nextTime = this.time + this.serviceTime;
-            waitTimes.add(this.time - c.arrivalTime);
-            for (Customer cqueue: this.queue) {
-                cqueue.isServed(this.nextTime);
-            }
-            // System.out.println("Server next time: " + this.nextTime);
-            c.done(this.nextTime);
+            this.serving(c);
         } else if (this.isIdle(c)) {
-            this.serves(c);
+            this.toServe(c);
         } else if (this.queue.contains(c)) { //queueing at server, not idle
-            this.serves(c);
+            this.toServe(c);
         } else if (this.hasQueueSpace()) {
             this.waits(c);
         } else if (this.queue.peek() != c && this.lastServer) {
@@ -68,7 +57,7 @@ public class Server {
             Customer cwaiting = this.queue.get(0);
             if (cwaiting.time >= this.nextTime){
                 //System.out.println(cwaiting.time + ", " + this.nextTime);
-                this.serves(cwaiting);
+                this.toServe(cwaiting);
             }else{
                 System.out.println("else");
                 break;
@@ -78,11 +67,11 @@ public class Server {
     }
 
     /**
-     * Server serves Customer, updating Customer's
+     * Server toServe Customer in the future, updating Customer's
      * state.
      * @param c Customer to serve
      */
-    public void serves(Customer c) {
+    public void toServe(Customer c) {
         this.nextTime = Math.max(c.time, this.nextTime);
         this.isServing = c;
         this.state = "serving";
@@ -93,6 +82,34 @@ public class Server {
         c.isServed(this.nextTime);
         this.time = Math.max(c.time, this.nextTime);
         //System.out.println(c);
+    }
+
+    public void serving(Customer c) {
+        if (this.queue.peek() == c) {
+            this.queue.poll();
+        }
+        this.serviceTime = Random.genServiceTime();
+        this.time = Math.max(this.time, c.time);
+        this.nextTime = Math.max(this.nextTime, 
+            this.time + this.serviceTime);
+        waitTimes.add(this.time - c.arrivalTime);
+        for (Customer cqueue: this.queue) {
+            cqueue.isServed(this.nextTime);
+        }
+        // System.out.println("Server next time: " + this.nextTime);
+        c.done(this.nextTime);
+    }
+
+    public void doneServing(Customer c) {
+        Customer.customers.remove(c);
+        // checks if it is time for server to rest
+        if (Random.genRandomRest() < pr) { //server_rest
+            this.state = "rest";
+            Events.addEvent(String.format("%.3f", this.time) + this.toString() + "rest");
+            this.nextTime = Math.max(this.nextTime,
+            this.time + Random.genRestPeriod());
+            Events.addEvent(String.format("%.3f", this.nextTime) + this.toString() + "back");
+        }
     }
 
     /**
@@ -157,5 +174,9 @@ public class Server {
 
     public void isLast() {
         this.lastServer = true;
+    }
+    
+    public String toString() {
+        return (" server " + this.index + " ");
     }
 }

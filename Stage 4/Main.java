@@ -1,6 +1,7 @@
 import cs2030.simulator.Server;
 import cs2030.simulator.Customer;
 import cs2030.simulator.Random;
+import cs2030.simulator.Events;
 import java.util.Scanner;
 
 class Main {
@@ -14,6 +15,9 @@ class Main {
         Random.lambda = sc.nextDouble();
         Random.mu = sc.nextDouble();
 
+        Random.restingRate = sc.nextDouble();
+        Server.pr = sc.nextDouble();
+
         Random.createRandomGenerator();
         Random.generate();
 
@@ -23,7 +27,7 @@ class Main {
         
         while (!Customer.customers.isEmpty()) {
             Customer next = Customer.customers.peek();
-            System.out.println(next);
+            Events.addEvent(next.toString());
 
             // if (next.index == 10 || next.index == 9) {
             //     System.out.println("PQ: " + Customer.customers);
@@ -84,6 +88,10 @@ class Main {
             }
             System.out.println();
             */
+        }
+
+        while (Events.hasEvents()) {
+            Events.printEvent();
         }
         System.out.println("[" + String.format("%.3f", Server.getAveWaitTime()) + " " + 
             Server.customersServed.size() + " " + Server.customersLeft.size() + "]");

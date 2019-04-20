@@ -6,10 +6,11 @@ public class Random {
     public static int cusNo;
     public static double lambda;
     public static double mu;
+    public static double restingRate;
     public static RandomGenerator rng;
 
     public static void createRandomGenerator() {
-        rng = new RandomGenerator(seed, lambda, mu);
+        rng = new RandomGenerator(seed, lambda, mu, restingRate);
     }
 
     /**
@@ -34,5 +35,13 @@ public class Random {
 
     public static double genServiceTime() {
         return rng.genServiceTime();
+    }
+
+    public static double genRandomRest() {
+        return rng.genRandomRest();
+    }
+
+    public static double genRestPeriod() {
+        return rng.genRestPeriod();
     }
 }
