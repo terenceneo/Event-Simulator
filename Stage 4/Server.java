@@ -84,6 +84,11 @@ public class Server {
         //System.out.println(c);
     }
 
+    /**
+     * Server is currently serving a Customer at the front of the
+     * queue or other wise.
+     * @param c Customer serving
+     */
     public void serving(Customer c) {
         this.state = "serving";
         if (this.queue.peek() == c) {
@@ -99,6 +104,11 @@ public class Server {
         c.done(this.nextTime);
     }
 
+    /**
+     * Removes Customer done serving and checks if it is time for
+     * Server to rest.
+     * @param c Customer done serving
+     */
     public void doneServing(Customer c) {
         Customer.customers.remove(c);
         // checks if it is time for server to rest
@@ -131,7 +141,7 @@ public class Server {
     }
 
     /**
-     * Update CUstomer's state to leave.
+     * Update Customer's state to leave.
      * @param c Customer
      */
     public void leaves(Customer c) {
@@ -160,6 +170,11 @@ public class Server {
         return (this.state.equals("idle"));
     }
 
+    /**
+     * Checks if there is space in Server's queue.
+     * @param c Customer to enqueue
+     * @return True if Server has queue space
+     */
     public boolean hasQueueSpace(Customer c) {
         // System.out.println("Server " + this.index + " time: "
         //     + this.time + " Customer: " + c.time);
@@ -191,6 +206,6 @@ public class Server {
     
     public String toString() {
         return (String.format("%.3f", this.time) + " server "
-        + this.index + " " + this.state);
+            + this.index + " " + this.state);
     }
 }
