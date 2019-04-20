@@ -19,8 +19,6 @@ class Main {
         Random.restingRate = sc.nextDouble();
         Server.pr = sc.nextDouble();
 
-        Random.pg = sc.nextDouble();
-
         Random.createRandomGenerator();
         Random.generate();
 
@@ -60,27 +58,6 @@ class Main {
                         done = true;
                         break;
                     }
-                }
-            }
-            /*
-             * a greedy customer is introduced that always chooses
-             * the queue with the fewest customers to join. In the
-             * case of a tie, the customer breaks the tie by
-             * choosing the first one while scanning from servers 1
-             * to k.
-             */
-            if (next.type.equals("(greedy)") && !done) {
-                int shortestQueueServer = 0;
-                int shortestQueueLength = Server.queuelength;
-                for (int i = 0; i < Server.servers.size(); i++) {
-                    Server s = Server.servers.get(i);
-                    if (s.queue.size() < shortestQueueLength) {
-                        shortestQueueServer = i;
-                    }
-                }
-                Server s = Server.servers.get(shortestQueueServer);
-                if (s.hasQueueSpace(next)) {
-                    s.triesToServe(next);
                 }
             }
             /*

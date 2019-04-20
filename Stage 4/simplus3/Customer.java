@@ -13,19 +13,17 @@ public class Customer {
     public String state;
     public int serverindex;
     public String servertype;
-    public String type;
     
     /**
      * Creates a Customer.
      * @param time arrival time of Customer
      */
-    public Customer(double time, String type) {
+    public Customer(double time) {
         this.index = ++count;
         this.time = time;
         this.arrivalTime = time;
         this.state = "arrives";
         this.serverindex = -1;
-        this.type = type;
     }
 
     public void isServed() {
@@ -84,8 +82,7 @@ public class Customer {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%.3f", this.time) + " " + this.index
-            + this.type + " " + this.state);
+        sb.append(String.format("%.3f", this.time) + " " + this.index + " " + this.state);
         if (this.state.equals("waits")) {
             sb.append(" to be served by " + this.servertype + " " + this.serverindex);
         } else if (this.state.equals("served")) {

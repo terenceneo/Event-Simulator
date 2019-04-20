@@ -10,7 +10,6 @@ public class Random {
     public static double restingRate;
     public static RandomGenerator rng;
     public static int totalServers;
-    public static double pg;
 
     public static void createRandomGenerator() {
         rng = new RandomGenerator(seed, lambda, mu, restingRate);
@@ -29,7 +28,7 @@ public class Random {
             }
             Server.add(s);
         }
-        // constructing self-checkouts
+
         for (int i = 0; i < Nself; i++) {
             Server s = new Server(i + 1 + serverNo, "self-check");
             if (i + 1 + serverNo == totalServers) {
@@ -38,11 +37,9 @@ public class Random {
             Server.add(s);
         }
 
-        // constructing customers
         double time = 0;
         for (int i = 0; i < cusNo; i++) {
-            String type = (genCustomerType() < pg) ? "(greedy)" : "";
-            Customer c = new Customer(time, type);
+            Customer c = new Customer(time);
             Customer.add(c);
             time += rng.genInterArrivalTime();
         }
@@ -58,9 +55,5 @@ public class Random {
 
     public static double genRestPeriod() {
         return rng.genRestPeriod();
-    }
-
-    public static double genCustomerType() {
-        return rng.genCustomerType();
     }
 }
