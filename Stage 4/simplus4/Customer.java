@@ -3,17 +3,17 @@ package cs2030.simulator;
 import java.util.PriorityQueue;
 
 public class Customer {
-    public static int count = 0;
-    public static int eventCounter = 0;
-    public int index;    
-    public static PriorityQueue<Customer> customers
+    private static int count = 0;
+    private static int eventCounter = 0;
+    private int index;    
+    private static PriorityQueue<Customer> customers
         = new PriorityQueue<Customer>(10000, new CusComparator());
-    public double time;
-    public double arrivalTime;
-    public String state;
-    public int serverindex;
-    public String servertype;
-    public String type;
+    private double time;
+    private double arrivalTime;
+    private String state;
+    private int serverindex;
+    private String servertype;
+    private String type;
     
     /**
      * Creates a Customer.
@@ -73,9 +73,49 @@ public class Customer {
         customers.add(c);
     }
 
+    public static void remove(Customer c) {
+        customers.remove(c);
+    }
+
+    public static boolean isEmpty() {
+        return customers.isEmpty();
+    }
+
+    public static Customer nextCustomer() {
+        return customers.peek();
+    }
+
     public void setServer(int serverindex, String servertype) {
         this.serverindex = serverindex;
         this.servertype = servertype;
+    }
+
+    public static int geteventCounter() {
+        return eventCounter++;
+    }
+
+    public double gettime() {
+        return this.time;
+    }
+
+    public int getindex() {
+        return this.index;
+    }
+
+    public String getstate() {
+        return this.state;
+    }
+
+    public double getarrivalTime() {
+        return this.arrivalTime;
+    }
+    
+    public String gettype() {
+        return this.type;
+    }
+    
+    public int getserverindex() {
+        return this.serverindex;
     }
 
     /**

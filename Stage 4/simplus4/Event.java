@@ -3,13 +3,13 @@ package cs2030.simulator;
 import java.util.PriorityQueue;
 
 public class Event {
-    public static PriorityQueue<Event> events
+    private static PriorityQueue<Event> events
         = new PriorityQueue<>(10000, new EventComparator());
-    public double time;
-    public int index;
-    public String text;
-    public int type;
-    public int counter;
+    private double time;
+    private int index;
+    private String text;
+    private int type;
+    private int counter;
 
     /**
      * Constructs an Event.
@@ -34,6 +34,22 @@ public class Event {
 
     public static boolean hasEvents() {
         return (events.size() > 0);
+    }
+
+    public double gettime() {
+        return this.time;
+    }
+
+    public int getindex() {
+        return this.index;
+    }
+
+    public int gettype() {
+        return this.type;
+    }
+        
+    public int getcounter() {
+        return this.counter;
     }
 
     /**
