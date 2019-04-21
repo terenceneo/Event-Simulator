@@ -5,22 +5,22 @@ import java.lang.Math;
 import java.util.LinkedList;
 
 public class Server {
-    public static ArrayList<Server> servers = new ArrayList<>();
-    public static ArrayList<Customer> customersServed = new ArrayList<>();
-    public static ArrayList<Customer> customersLeft = new ArrayList<>();
-    public static ArrayList<Double> waitTimes = new ArrayList<>();
-    public LinkedList<Customer> queue = new LinkedList<>();
-    public static int queuelength;
-    public int eventCounter = 0;
-    public double time;
-    public double nextTime;
-    public double serviceTime;
-    public String state;
-    public Customer isServing;
-    public int index;
-    public boolean lastServer = false;
-    public static double pr;
-    public String type;
+    private static ArrayList<Server> servers = new ArrayList<>();
+    private static ArrayList<Customer> customersServed = new ArrayList<>();
+    private static ArrayList<Customer> customersLeft = new ArrayList<>();
+    private static ArrayList<Double> waitTimes = new ArrayList<>();
+    private LinkedList<Customer> queue = new LinkedList<>();
+    private static int queuelength;
+    private int eventCounter = 0;
+    private double time;
+    private double nextTime;
+    private double serviceTime;
+    private String state;
+    private Customer isServing;
+    private int index;
+    private boolean lastServer = false;
+    private static double pr;
+    private String type;
     
     /**
      * Constructs a Server.
@@ -41,11 +41,11 @@ public class Server {
      * @param c Customer to be served
      */
     public void triesToServe(Customer c) {
-        if (c.state.equals("leaves")) {
-            Customer.customers.remove(c);
-        } else if (c.state.equals("done")) {
+        if (c.getstate().equals("leaves")) {
+            Customer.remove(c);
+        } else if (c.getstate().equals("done")) {
             this.doneServing(c);
-        } else if (c.state.equals("served")) {
+        } else if (c.getstate().equals("served")) {
             this.serving(c);
         } else if (this.isIdle(c)) {
             this.toServe(c);
@@ -75,9 +75,9 @@ public class Server {
      * state.
      * @param c Customer to serve
      */
-    public void toServe(Customer c) {
-        this.time = Math.max(c.time, this.time);
-        this.nextTime = Math.max(c.time, this.nextTime);
+    private void toServe(Customer c) {
+        this.time = Math.max(c.gettime(), this.time);
+        this.nextTime = Math.max(c.gettime(), this.nextTime);
         this.isServing = c;
         c.setServer(this.index, this.type);
         if (!customersServed.contains(c)) {
@@ -92,16 +92,16 @@ public class Server {
      * queue or other wise.
      * @param c Customer serving
      */
-    public void serving(Customer c) {
+    private void serving(Customer c) {
         this.state = "serving";
         if (this.queue.peek() == c) {
             this.queue.poll();
         }
         this.serviceTime = Random.genServiceTime();
-        this.time = Math.max(this.time, c.time);
+        this.time = Math.max(this.time, c.gettime());
         this.nextTime = Math.max(this.nextTime, 
             this.time + this.serviceTime);
-        waitTimes.add(this.time - c.arrivalTime);
+        waitTimes.add(this.time - c.getarrivalTime());
         this.updateQueueNextTime();
         // System.out.println("Server next time: " + this.nextTime);
         c.done(this.nextTime);
@@ -112,12 +112,12 @@ public class Server {
      * Server to rest.
      * @param c Customer done serving
      */
-    public void doneServing(Customer c) {
-        Customer.customers.remove(c);
+    private void doneServing(Customer c) {
+        Customer.remove(c);
         // checks if it is time for server to rest
         if (this.type == "server" && Random.genRandomRest() < pr) { //server_rest
             this.state = "rest";
-            this.time = Math.max(c.time, this.time);
+            this.time = Math.max(c.gettime(), this.time);
             Event event = new Event(this.time, this.index,
                 this.toString(), 2, this.eventCounter++);
             this.nextTime = Math.max(this.nextTime,
@@ -134,8 +134,8 @@ public class Server {
      * Adds Customer to queue of Server.
      * @param c Customer that waits
      */
-    public void waits(Customer c) {
-        this.time = Math.max(c.time, this.time);
+    private void waits(Customer c) {
+        this.time = Math.max(c.gettime(), this.time);
         c.waits();
         c.setServer(this.index, this.type);
         if (this.queue.peekLast() != c) {
@@ -147,8 +147,8 @@ public class Server {
      * Update Customer's state to leave.
      * @param c Customer
      */
-    public void leaves(Customer c) {
-        this.time = Math.max(c.time, this.time);
+    private void leaves(Customer c) {
+        this.time = Math.max(c.gettime(), this.time);
         c.leaves();
         customersLeft.add(c);
         //System.out.println(c);
@@ -167,7 +167,7 @@ public class Server {
      * @return True if Server is Idle
      */
     public boolean isIdle(Customer c) {
-        if (!this.state.equals("idle") && this.nextTime <= c.time) {
+        if (!this.state.equals("idle") && this.nextTime <= c.gettime()) {
             this.state = "idle";
         }
         return (this.state.equals("idle"));
@@ -180,7 +180,7 @@ public class Server {
      */
     public boolean hasQueueSpace(Customer c) {
         // System.out.println("Server " + this.index + " time: "
-        //     + this.time + " Customer: " + c.time);
+        //     + this.time + " Customer: " + c.gettime());
         return (this.queue.size() < Server.queuelength);
     }
 
@@ -203,8 +203,52 @@ public class Server {
         servers.add(s);
     }
 
+    public static void addCustomersLeft(Customer c) {
+        customersLeft.add(c);
+    }
+
     public void isLast() {
         this.lastServer = true;
+    }
+
+    public static void setpr(double pr) {
+        Server.pr = pr;
+    }
+
+    public static void setqueuelength(int queuelength) {
+        Server.queuelength = queuelength;
+    }
+
+    public static int getqueuelength() {
+        return queuelength;
+    }
+
+    public boolean getlastServer() {
+        return this.lastServer;
+    }
+
+    public int getcurrQueueSize() {
+        return this.queue.size();
+    }
+
+    public static int getcustomersServed() {
+        return customersServed.size();
+    }
+
+    public static int getcustomersLeft() {
+        return customersLeft.size();
+    }
+
+    public static int getServerNo() {
+        return servers.size();
+    }
+
+    public static Server getServer(int i) {
+        return servers.get(i);
+    }
+
+    public static ArrayList<Server> getServers() {
+        return servers;
     }
     
     public String toString() {

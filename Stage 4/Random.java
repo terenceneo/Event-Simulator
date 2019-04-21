@@ -1,16 +1,17 @@
 package cs2030.simulator;
 
 public class Random {
-    public static int seed;
-    public static int serverNo;
-    public static int cusNo;
-    public static int Nself;
-    public static double lambda;
-    public static double mu;
-    public static double restingRate;
-    public static RandomGenerator rng;
-    public static int totalServers;
-    public static double pg;
+    private static int seed;
+    private static int serverNo;
+    private static int cusNo;
+    private static int Nself;
+    private static double lambda;
+    private static double mu;
+    private static double restingRate;
+    private static double pg;
+
+    private static RandomGenerator rng;
+    private static int totalServers;
 
     public static void createRandomGenerator() {
         rng = new RandomGenerator(seed, lambda, mu, restingRate);
@@ -62,5 +63,41 @@ public class Random {
 
     public static double genCustomerType() {
         return rng.genCustomerType();
+    }
+
+    public static int gettotalServers() {
+        return totalServers;
+    }
+
+    public static void setseed(int i) {
+        seed = i;
+    }
+
+    public static void setserverNo(int i) {
+        serverNo = i;
+    }
+
+    public static void setcusNo(int i) {
+        cusNo = i;
+    }
+
+    public static void setNself(int i) {
+        Nself = i;
+    }
+
+    public static void setlambda(double i) {
+        lambda = i;
+    }
+
+    public static void setmu(double i) {
+        mu = i;
+    }
+
+    public static void setrestingRate(double i) {
+        restingRate = i;
+    }
+
+    public static void setpg(double i) {
+        pg = i;
     }
 }
